@@ -1,5 +1,6 @@
-from django.shortcuts import render
-from pages.models import MainScrollModel, ProductModel
+from django.shortcuts import render, redirect
+from pages.models import MainScrollModel, ProductModel, ReservationModel
+from pages.forms import ReservationForm
 
 
 def home_page_view(request):
@@ -18,3 +19,14 @@ def home_page_view(request):
         'salads': salads,
     }
     return render(request, 'index.html', context)
+
+def reserve_view(request):
+    if request.method == 'POST':
+        form = ReservationForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('pages:home')
+        else:
+            return render(request, 'index.html')
+    else:
+        return render(request, 'index.html')
